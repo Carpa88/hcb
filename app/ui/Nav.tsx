@@ -1,12 +1,25 @@
+'use client'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon, UserCircleIcon } from '@heroicons/react/24/outline'
 import { navigation, user, userNavigation } from '@app/lib/consts'
 import clsx from 'clsx';
 import Logo from '@app/ui/Logo';
+import { usePathname } from '@node_modules/next/navigation';
+import { useState, useEffect } from 'react';
+import Title from './Title';
+import Link from 'next/link';
 
 const Nav = () => {
+  const pathname = usePathname();
+    const [title, setTitle] = useState<String>('');
+    
+    useEffect(()=> {
+      navigation.map(item => item.href === pathname && setTitle(item.name))
+    }, [])
+
   const isAuthorized = false;
   return (
+    <>
     <Disclosure as="nav" className="bg-gray-800">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
@@ -15,17 +28,17 @@ const Nav = () => {
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
                     href={item.href}
-                    aria-current={item.current ? 'page' : undefined}
+                    aria-current={item.href === pathname ? 'page' : undefined}
                     className={clsx(
-                      item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                      item.href === pathname ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                       'rounded-md px-3 py-2 text-sm font-medium',
                     )}
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -91,11 +104,11 @@ const Nav = () => {
           {navigation.map((item) => (
             <DisclosureButton
               key={item.name}
-              as="a"
+              as={Link}
               href={item.href}
-              aria-current={item.current ? 'page' : undefined}
+              aria-current={item.href === pathname ? 'page' : undefined}
               className={clsx(
-                item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                item.href === pathname ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                 'block rounded-md px-3 py-2 text-base font-medium',
               )}
             >
@@ -125,7 +138,7 @@ const Nav = () => {
             {userNavigation.map((item) => (
               <DisclosureButton
                 key={item.name}
-                as="a"
+                as={Link}
                 href={item.href}
                 className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
               >
@@ -136,6 +149,8 @@ const Nav = () => {
         </div>
       </DisclosurePanel>
     </Disclosure>
+    <Title title={title}/>
+    </>
   )
 }
 

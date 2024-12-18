@@ -5,11 +5,12 @@ export const user = {
     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
 export const navigation = [
-  { name: 'Пастухи Беларуси', href: '#', current: true },
-  { name: 'Гостиница для собак', href: '#', current: false },
-  { name: 'Тренировки', href: '#', current: false },
-  { name: 'Соревнования', href: '#', current: false },
-  { name: 'Уроки', href: '#', current: false },
+  { name: 'Пастухи Беларуси', href: '/',},
+  { name: 'Гостиница для собак', href: '/hostel'},
+  { name: 'Тренировки', href: '/practices'},
+  { name: 'Соревнования', href: '/trial'},
+  { name: 'Заявка на соревнование', href: '/trial/form'},
+  { name: 'Уроки', href: '/lessons'},
 ]
 export const userNavigation = [
   { name: 'Your Profile', href: '#' },
