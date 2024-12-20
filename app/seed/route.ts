@@ -1,6 +1,6 @@
 // import bcrypt from 'bcrypt';
 // import { db } from '@vercel/postgres';
-// import { invoices, customers, revenue, users } from '../lib/placeholder-data';
+// // import { users } from '../lib/placeholder-data';
 
 // const client = await db.connect();
 
@@ -9,9 +9,9 @@
 //   await client.sql`
 //     CREATE TABLE IF NOT EXISTS users (
 //       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-//       name VARCHAR(255) NOT NULL,
-//       email TEXT NOT NULL UNIQUE,
-//       password TEXT NOT NULL
+//       login VARCHAR(255) NOT NULL UNIQUE,
+//       password VARCHAR(255) NOT NULL,
+//       created_at TIMESTAMP DEFAULT NOW()
 //     );
 //   `;
 
@@ -19,8 +19,8 @@
 //     users.map(async (user) => {
 //       const hashedPassword = await bcrypt.hash(user.password, 10);
 //       return client.sql`
-//         INSERT INTO users (id, name, email, password)
-//         VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
+//         INSERT INTO users (id, login, password)
+//         VALUES (${user.id}, ${user.login}, ${hashedPassword})
 //         ON CONFLICT (id) DO NOTHING;
 //       `;
 //     }),
@@ -29,94 +29,102 @@
 //   return insertedUsers;
 // }
 
-// async function seedInvoices() {
+// async function seedUserProfiles() {
 //   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
 //   await client.sql`
-//     CREATE TABLE IF NOT EXISTS invoices (
+//     CREATE TABLE IF NOT EXISTS dog_owners (
 //       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-//       customer_id UUID NOT NULL,
-//       amount INT NOT NULL,
-//       status VARCHAR(255) NOT NULL,
-//       date DATE NOT NULL
-//     );
-//   `;
-
-//   const insertedInvoices = await Promise.all(
-//     invoices.map(
-//       (invoice) => client.sql`
-//         INSERT INTO invoices (customer_id, amount, status, date)
-//         VALUES (${invoice.customer_id}, ${invoice.amount}, ${invoice.status}, ${invoice.date})
-//         ON CONFLICT (id) DO NOTHING;
-//       `,
-//     ),
-//   );
-
-//   return insertedInvoices;
-// }
-
-// async function seedCustomers() {
-//   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
-//   await client.sql`
-//     CREATE TABLE IF NOT EXISTS customers (
-//       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+//       user_id UUID NOT NULL UNIQUE,
 //       name VARCHAR(255) NOT NULL,
 //       email VARCHAR(255) NOT NULL,
-//       image_url VARCHAR(255) NOT NULL
+//       phone VARCHAR(20),
+//       image_url VARCHAR(255),
+//       FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 //     );
 //   `;
-
-//   const insertedCustomers = await Promise.all(
-//     customers.map(
-//       (customer) => client.sql`
-//         INSERT INTO customers (id, name, email, image_url)
-//         VALUES (${customer.id}, ${customer.name}, ${customer.email}, ${customer.image_url})
-//         ON CONFLICT (id) DO NOTHING;
-//       `,
-//     ),
-//   );
-
-//   return insertedCustomers;
 // }
 
-// async function seedRevenue() {
+// async function seedDogs() {
+//   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+
 //   await client.sql`
-//     CREATE TABLE IF NOT EXISTS revenue (
-//       month VARCHAR(4) NOT NULL UNIQUE,
-//       revenue INT NOT NULL
+//     CREATE TABLE IF NOT EXISTS dogs (
+//       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+//       dog_owner_id UUID NOT NULL UNIQUE,
+//       name VARCHAR(255) NOT NULL,
+//       breed VARCHAR(255) NOT NULL,
+//       birth_year INT NOT NULL,
+//       sex VARCHAR(10) CHECK (sex IN ('boy', 'girl')),
+//       CONSTRAINT fk_dog_owner FOREIGN KEY (dog_owner_id) REFERENCES dog_owners (id) ON DELETE SET NULL
 //     );
 //   `;
-
-//   const insertedRevenue = await Promise.all(
-//     revenue.map(
-//       (rev) => client.sql`
-//         INSERT INTO revenue (month, revenue)
-//         VALUES (${rev.month}, ${rev.revenue})
-//         ON CONFLICT (month) DO NOTHING;
-//       `,
-//     ),
-//   );
-
-//   return insertedRevenue;
 // }
 
-export async function GET() {
-  return Response.json({
-    message:
-      'Uncomment this file and remove this line. You can delete this file when you are finished.',
-  });
-  // try {
-  //   await client.sql`BEGIN`;
-  //   await seedUsers();
-  //   await seedCustomers();
-  //   await seedInvoices();
-  //   await seedRevenue();
-  //   await client.sql`COMMIT`;
+// async function seedTrials() {
+//   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+//   await client.sql`
+//     CREATE TABLE IF NOT EXISTS trials (
+//       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+//       name VARCHAR(255) NOT NULL,
+//       start_at VARCHAR(255) NOT NULL,
+//       ends_on VARCHAR(255) NOT NULL,
+//       judge_id VARCHAR(255) NOT NULL,
+//       description TEXT
+//     );
+//   `;
+// }
 
-  //   return Response.json({ message: 'Database seeded successfully' });
-  // } catch (error) {
-  //   await client.sql`ROLLBACK`;
-  //   return Response.json({ error }, { status: 500 });
-  // }
-}
+// async function seedApplications() {
+//   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+//   await client.sql`
+//     CREATE TABLE IF NOT EXISTS applications (
+//       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+//       dog_owner_id UUID NOT NULL,
+//       dog_id UUID NOT NULL,
+//       trial_id UUID NOT NULL,
+//       registration_date TIMESTAMP DEFAULT NOW(),
+//       CONSTRAINT fk_dog_owner FOREIGN KEY (dog_owner_id) REFERENCES dog_owners (id) ON DELETE SET NULL,
+//       CONSTRAINT fk_dog FOREIGN KEY (dog_id) REFERENCES dogs (id) ON DELETE SET NULL,
+//       CONSTRAINT fk_trial FOREIGN KEY (trial_id) REFERENCES trials (id) ON DELETE SET NULL
+//     );
+//   `;
+// }
+
+// async function seedUnregistredApplications() {
+//     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+//     await client.sql`
+//       CREATE TABLE IF NOT EXISTS UnregistredApps (
+//         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+//         name VARCHAR(255) NOT NULL,
+//         email VARCHAR(255) NOT NULL,
+//         phone VARCHAR(20),
+//         image_url VARCHAR(255),
+//         dog_name VARCHAR(255) NOT NULL,
+//         breed VARCHAR(255) NOT NULL,
+//         dog_birth_year VARCHAR(255) NOT NULL,
+//         sex VARCHAR(10) CHECK (sex IN ('boy', 'girl')),
+//         trial VARCHAR(10) NOT NULL,
+//         registration_date TIMESTAMP DEFAULT NOW()
+//       );
+//     `;
+//   }
+
+// export async function GET() {
+//   try {
+//     await client.sql`BEGIN`;
+//     await seedUsers();
+//     await seedUserProfiles();
+//     await seedDogs();
+//     await seedTrials();
+//     await seedApplications();
+//  await seedUnregistredApplications();
+//     await client.sql`COMMIT`;
+
+
+//     return Response.json({ message: 'Database seeded successfully' });
+//   } catch (error) {
+//     await client.sql`ROLLBACK`;
+//     return Response.json({ error }, { status: 500 });
+//   }
+// }
