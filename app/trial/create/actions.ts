@@ -46,13 +46,22 @@ export const createTrial = async(prevState: StateTrial, formData: FormData) => {
   try {
     await sql`
       INSERT INTO trials (name, start_at, ends_on, judge_id, description)
-      VALUES (${name.toString()}, ${start_at.toString()}, ${ends_on.toString()}, ${judge_id.toString()}, ${description})
+      VALUES (${name}, ${start_at}, ${ends_on}, ${judge_id}, ${description})
     `;
   }catch(error){
-    console.error('Database error:', error);
     return{message: 'Failed to create invoices.'};
   }
-  // Revalidate the cache for the invoices page and redirect the user.
+  
   revalidatePath('/trial');
   redirect('/trial');
+
+  (async () => {
+    try {
+      const result = await sql`SELECT 1`;
+      console.log('Connection successful:', result);
+    } catch (error) {
+      console.error('Database connection error:', error);
+    }
+  })();
+
 }

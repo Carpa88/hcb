@@ -7,7 +7,6 @@ import { useActionState } from "react";
 import { createTrial } from "./actions";
 import { initialStateTrial } from '@app/lib/consts';
 
-
 const Page = () => {  
   const [state, formAction, isPading] = useActionState(createTrial, initialStateTrial)
 
