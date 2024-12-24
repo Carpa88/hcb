@@ -5,10 +5,10 @@ import Input from "@app/ui/form/Input";
 import Section from "@app/ui/form/Section";
 import { useActionState } from "react";
 import { createTrial } from "./actions";
-import { initialStateTrial } from '@app/lib/consts';
+import { initCreateTrial } from '../consts';
 
 const Page = () => {  
-  const [state, formAction, isPading] = useActionState(createTrial, initialStateTrial)
+  const [state, formAction, isPading] = useActionState(createTrial, initCreateTrial)
 
   return (
     <Form buttonState={isPading} action={formAction}>
