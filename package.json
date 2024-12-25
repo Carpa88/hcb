@@ -7,7 +7,7 @@
     "build": "next build",
     "dev": "next dev --turbopack",
     "start": "next start",
-    "lint": "eslint . --fix",
+    "lint": "eslint . --ignore-pattern .next",
     "format": "prettier --write ."
   },
   "dependencies": {

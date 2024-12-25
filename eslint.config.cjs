@@ -3,6 +3,7 @@ const eslintParserTypescript = require('@typescript-eslint/parser');
 
 module.exports = [
   {
+    ignores: ['.next/**'], // Ensure .next folder is globally ignored
     files: ['**/*.{js,jsx,ts,tsx}'], // Match files to lint
     languageOptions: {
       parser: eslintParserTypescript, // Use TypeScript parser
@@ -19,7 +20,7 @@ module.exports = [
     },
     rules: {
       // Add your ESLint rules here
-      'no-console': ['warn', { allow: ['error', 'warn'] }], // Example rule
+      'no-console': ['warn', { allow: ['error', 'warn'] }],
     },
   },
 ];
