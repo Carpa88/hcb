@@ -1,23 +1,56 @@
-import { sql } from "@vercel/postgres";
-import { STrial } from "../types";
+import { sql } from '@vercel/postgres';
+import { ITEMS_PER_PAGE } from '../consts';
+import { ITrial } from '../types';
 
-export const fetchTrials = async() => {
+export const fetchTrialsPages = async (query: string) => {
   try {
-    const data = await sql<STrial>`
+    const count = await sql`SELECT COUNT(*)
+    FROM trials
+    WHERE
+      trials.name ILIKE ${`%${query}%`} OR
+      trials.start_at ILIKE ${`%${query}%`} OR
+      trials.ends_on ILIKE ${`%${query}%`} OR
+      trials.judge_id ILIKE ${`%${query}%`} OR
+      trials.description ILIKE ${`%${query}%`}
+  `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Ошибка взаимодействия с базой данных');
+  }
+};
+
+export const fetchFilteredTrials = async (
+  query: string,
+  currentPage: number
+) => {
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const trials = await sql<ITrial>`
       SELECT
-        id,
-        name,
-        start_at,
-        ends_on,
-        judge_id
+        trials.id,
+        trials.name,
+        trials.start_at,
+        trials.ends_on,
+        trials.judge_id,
+        trials.description
       FROM trials
-      ORDER BY name ASC
+      WHERE
+        trials.name ILIKE ${`%${query}%`} OR
+        trials.start_at ILIKE ${`%${query}%`} OR
+        trials.ends_on ILIKE ${`%${query}%`} OR
+        trials.judge_id ILIKE ${`%${query}%`} OR
+        trials.description ILIKE ${`%${query}%`}
+      ORDER BY trials.name DESC
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
 
-    const trials = data.rows;
-    return trials;
-  } catch (err) {
-    console.error('Database Error:', err);
-    throw new Error('Failed to fetch all trials');
+    return trials.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Ошибка соединения с базой данных');
   }
-}
+};

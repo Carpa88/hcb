@@ -19,6 +19,9 @@ const config: Config = {
         },
       },
     },
+    fontFamily: {
+      machine: ['"OCR A"', 'monospace'],
+    },
   },
   plugins: [require('@tailwindcss/forms')],
 };
