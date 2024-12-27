@@ -1,10 +1,10 @@
 import Pagination from '@/app/ui/invoices/pagination';
 import Search from '@app/ui/Search';
 import Table from '@/app/ui/Table';
-import { CreateButton } from '@/app/ui/button';
+import { CreateButton } from '@app/ui/buttons';
 import { TableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
-import { fetchTrialsPages, fetchFilteredTrials } from './actions';
+// import { fetchTrialsPages, fetchFilteredTrials, deleteTrial } from './actions';
 
 export const Page = async (props: {
   searchParams?: Promise<{
@@ -15,9 +15,9 @@ export const Page = async (props: {
   const searchParams = await props.searchParams;
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  const totalPages = await fetchTrialsPages(query);
-  const data = await fetchFilteredTrials(query, totalPages);
-  console.log(data);
+  // const totalPages = await fetchTrialsPages(query);
+  // const data = await fetchFilteredTrials(query, totalPages || 1);
+
   return (
     <div className="w-full">
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
@@ -26,12 +26,18 @@ export const Page = async (props: {
       </div>
       <Suspense key={query + currentPage} fallback={<TableSkeleton />}>
         <Table
-          data={data}
-          cols={['Название', 'Дата начала', 'Дата окончания', 'Судьи', 'Описание']}
+          // data={data}
+          cols={[
+            'Название',
+            'Дата начала',
+            'Дата окончания',
+            'Судьи',
+            'Описание',
+          ]}
         />
       </Suspense>
       <div className="mt-5 flex w-full justify-center">
-        <Pagination totalPages={totalPages} />
+        {/* <Pagination totalPages={totalPages} /> */}
       </div>
     </div>
   );

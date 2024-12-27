@@ -1,12 +1,20 @@
-import { UpdateInvoice, DeleteInvoice } from '@/app/ui/invoices/buttons';
+import { UpdateButtonIcon, DeleteButton } from '@app/ui/buttons';
 import { IData } from '@app/lib/types';
+// import { deleteTrial } from '@app/trial/(overview)/actions';
 
-const Table = ({ data, cols }: { data: IData[]; cols: string[] }) => {
-  console.log(data)
+const Table = ({ data, cols }: { data?: IData[]; cols: string[] }) => {
+  // const handleClick = async(id: string): Promise<void> => {
+  //   const result = await deleteTrial(id);
+  //   if (!result.success) {
+  //     alert(result.message);
+  //   } else {
+  //     console.error(result.message);
+  //   }
+  // }
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
+        <div className="rounded-lg bg-slate-50 p-2 md:pt-0">
           <div className="md:hidden">
             {data?.map((item) => (
               <div
@@ -20,24 +28,29 @@ const Table = ({ data, cols }: { data: IData[]; cols: string[] }) => {
                     </p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdateInvoice id={item.id} />
-                    <DeleteInvoice id={item.id} />
+                    <UpdateButtonIcon href={`/trial/${item.id}/edit`} />
+                    {/* <DeleteButton onClick={() => handleClick(item.id)} /> */}
                   </div>
                 </div>
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
                       <p>
-                        <span className="text-sm text-gray-500 font-machine">судья:</span> 
-                        {' '}{item.judge_id}</p>
+                        <span className="text-sm text-slate-500 font-machine">
+                          судья:
+                        </span>{' '}
+                        {item.judge_id}
+                      </p>
                     </div>
-                    <p className="text-sm text-gray-500">{item.start_at} - {item.ends_on}</p>
+                    <p className="text-sm text-slate-500">
+                      {item.start_at} - {item.ends_on}
+                    </p>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-          <table className="hidden min-w-full text-gray-900 md:table">
+          <table className="hidden min-w-full text-slate-900 md:table">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 {cols.map(
@@ -73,8 +86,8 @@ const Table = ({ data, cols }: { data: IData[]; cols: string[] }) => {
                   )}
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateInvoice id={item.id} />
-                      <DeleteInvoice id={item.id} />
+                      <UpdateButtonIcon href={`/trial/${item.id}/edit`} />
+                      {/* <DeleteButton onClick={() => handleClick(item.id)} /> */}
                     </div>
                   </td>
                 </tr>

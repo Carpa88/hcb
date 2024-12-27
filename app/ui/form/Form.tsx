@@ -1,13 +1,25 @@
-
-
-const Form = ({children, title, description, action, buttonState}: {children: React.ReactNode; title?: string; description?: string; action?: ()=>void; buttonState?: boolean }) => {
+const Form = ({
+  children,
+  title,
+  description,
+  action,
+  buttonState,
+}: {
+  children: React.ReactNode;
+  title?: string;
+  description?: string;
+  action?: (data: FormData) => void;
+  buttonState?: boolean;
+}) => {
   return (
     <form action={action}>
-      <div className="space-y-12">
-          {children}
-      </div>
+      <div className="space-y-12">{children}</div>
       <div className="mt-6 flex items-center justify-end gap-x-6">
-        <button type="button"  disabled={buttonState} className="text-sm/6 font-semibold text-gray-900">
+        <button
+          type="button"
+          disabled={buttonState}
+          className="text-sm/6 font-semibold text-gray-900"
+        >
           Очистить и вернуться
         </button>
         <button
@@ -19,7 +31,7 @@ const Form = ({children, title, description, action, buttonState}: {children: Re
         </button>
       </div>
     </form>
-  )
-}
+  );
+};
 
-export default Form
+export default Form;
